@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SHE-SECURE | Women Safety App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.CSS">
+   
+</head>
+<body>
+    <!-- ========== SPLASH SCREEN ========== -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-logo-container">
+            <div class="splash-shield">
+                <i class="fas fa-shield-alt splash-icon"></i>
+                <div class="splash-ring ring-1"></div>
+                <div class="splash-ring ring-2"></div>
+                <div class="splash-ring ring-3"></div>
+            </div>
+            <h1 class="splash-title">SHECURE</h1>
+            <p class="splash-tagline">Stay Safe Anytime, Anywhere</p>
+        </div>
+        
+        <div class="splash-loading">
+            <div class="loading-text" id="loadingText">Initializing Safety Systems</div>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loadingProgress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== AUTH SCREENS ========== -->
+    <!-- Login Screen -->
+    <div class="auth-screen hidden" id="loginScreen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <div class="auth-logo-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="auth-logo-text">SHECURE</div>
+                </div>
+                <h2 class="auth-title">Welcome Back</h2>
+                <p class="auth-subtitle">Sign in to continue</p>
+            </div>
+            
+            <form class="auth-form" id="loginForm">
+                <div class="input-group">
+                    <label class="input-label">Email or Phone</label>
+                    <input type="text" class="input-field" placeholder="Enter your email or phone" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Password</label>
+                    <input type="password" class="input-field" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                
+                <div class="auth-divider">
+                    <span>or continue with</span>
+                </div>
+                
+                <div class="social-auth">
+                    <button type="button" class="social-btn" id="googleLogin">
+                        <i class="fab fa-google"></i> Continue with Google
+                    </button>
+                    <button type="button" class="social-btn" id="phoneLogin">
+                        <i class="fas fa-phone-alt"></i> Continue with Phone
+                    </button>
+                </div>
+                
+                <div class="auth-footer">
+                    Don't have an account? <a href="#" id="goToSignup">Sign Up</a>
+                </div>
+                
+                <p class="auth-terms">
+                    By continuing, you agree to our Terms & Privacy Policy
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Screen -->
+    <div class="auth-screen hidden" id="signupScreen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <div class="auth-logo-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="auth-logo-text">SHECURE</div>
+                </div>
+                <h2 class="auth-title">Create Account</h2>
+                <p class="auth-subtitle">Join SHE-SECURE today</p>
+            </div>
+            
+            <form class="auth-form" id="signupForm">
+                <div class="input-group">
+                    <label class="input-label">Full Name</label>
+                    <input type="text" class="input-field" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Email</label>
+                    <input type="email" class="input-field" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Phone Number</label>
+                    <input type="tel" class="input-field" placeholder="+91 XXXXX XXXXXX" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Password</label>
+                    <input type="password" class="input-field" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+                
+                <div class="auth-divider">
+                    <span>or continue with</span>
+                </div>
+                
+                <div class="social-auth">
+                    <button type="button" class="social-btn" id="googleSignup">
+                        <i class="fab fa-google"></i> Continue with Google
+                    </button>
+                    <button type="button" class="social-btn" id="phoneSignup">
+                        <i class="fas fa-phone-alt"></i> Continue with Phone
+                    </button>
+                </div>
+                
+                <div class="auth-footer">
+                    Already have an account? <a href="#" id="goToLogin">Sign In</a>
+                </div>
+                
+                <p class="auth-terms">
+                    By continuing, you agree to our Terms & Privacy Policy
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== MAIN APP ========== -->
+    <div class="main-app" id="mainApp">
+        <!-- Toast Notification -->
+        <div class="toast" id="toast"></div>
+
+        <!-- Header -->
+        <div class="header">
+            <button class="menu-btn" onclick="showProfileModal()">
+                <i class="fas fa-user"></i>
+            </button>
+            <button class="upgrade-btn" onclick="showSubscriptionModal()">
+                <i class="fas fa-crown"></i> UPGRADE
+            </button>
+            <div class="plan-badge" id="planBadge">FREE</div>
+            <h1><i class="fas fa-shield-alt"></i> SHECURE</h1>
+            <p>AI-Powered Women Safety App</p>
+        </div>
+
+        <!-- Risk Level -->
+        <div class="risk-card">
+            <div class="risk-header">
+                <i class="fas fa-brain"></i>
+                <div>
+                    <h2>AI Risk Scanner</h2>
+                    <p>Analyzing surroundings</p>
+                </div>
+            </div>
+            <div class="risk-level">
+                <div class="risk-status">
+                    <span>Low Risk</span>
+                    <span id="riskPercent">30%</span>
+                </div>
+                <div class="risk-bar">
+                    <div class="risk-fill" id="riskFill"></div>
+                </div>
+                <p id="riskMessage">✅ Area appears safe</p>
+            </div>
+        </div>
+
+        <!-- SOS Button with Timer -->
+        <div class="sos-container">
+            <button class="sos-btn" id="sosBtn" onclick="startSOSTimer()">
+                <i class="fas fa-bell"></i>
+                SOS
+            </button>
+            <div class="sos-timer" id="sosTimer">3</div>
+            <button class="sos-cancel-btn" id="sosCancelBtn" onclick="cancelSOS()">
+                <i class="fas fa-times"></i> CANCEL SOS
+            </button>
+            <p class="sos-subtitle">Tap or Shake Phone Twice</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Location Card -->
+            <div class="location-card">
+                <div class="location-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h2>Current Location</h2>
+                        <p>GPS Active</p>
+                    </div>
+                </div>
+                <div class="location-details">
+                    <p id="locationText">Fetching location...</p>
+                    <button onclick="getLocation()" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; margin-top: 15px; cursor: pointer; font-size: 16px;">
+                        <i class="fas fa-sync-alt"></i> Refresh Location
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="actions-grid">
+                <h3 class="grid-title">Quick Actions</h3>
+                <div class="grid">
+                    <div class="action-card" onclick="showFakeCallModal()">
+                        <i class="fas fa-phone"></i>
+                        <p>Fake Call</p>
+                    </div>
+                    <div class="action-card" onclick="showSafePlacesModal()">
+                        <i class="fas fa-hospital"></i>
+                        <p>Safe Places</p>
+                    </div>
+                    <div class="action-card" onclick="showMapModal()">
+                        <i class="fas fa-map"></i>
+                        <p>Safe Route</p>
+                        <span class="locked-feature" id="mapLock">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </div>
+                    <div class="action-card" onclick="showGuardiansModal()">
+                        <i class="fas fa-users"></i>
+                        <p>Guardians</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Safety Tip -->
+            <div class="safety-tip">
+                <i class="fas fa-lightbulb"></i>
+                <div>
+                    <strong>Safety Tip:</strong> Use Fake Call feature if you feel someone is following you.
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation with SOS Button -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showHome()">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="showMapModal()">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Map</span>
+            </div>
+                        
+            <!-- SOS Navigation Button (Center) -->
+            <div class="nav-sos">
+                <button class="sos-nav-btn" id="navSosBtn" onclick="startSOSTimer()">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+            
+            <div class="nav-item" onclick="showLearnModal()">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Learn</span>
+            </div>
+            <div class="nav-item" onclick="showGuardiansModal()">
+                <i class="fas fa-shield-alt"></i>
+                <span>Safety</span>
+            </div>
+        </div>
+
+        <!-- ========== MODALS ========== -->
+        <!-- Profile Modal -->
+        <div class="modal" id="profileModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-user"></i> My Profile</h2>
+                    <button class="close-btn" onclick="closeModal('profileModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="profile-header">
+                        <div class="profile-avatar" onclick="changeProfilePicture()">
+                            <i class="fas fa-female" id="profileAvatar"></i>
+                        </div>
+                        <h3 id="profileUserName">Ananya Sharma</h3>
+                        <p>Member since: <span id="profileJoinDate">Jan 2024</span></p>
+                        <button onclick="editProfile()" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; margin-top: 15px; cursor: pointer; font-size: 16px;">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="profile-item">
+                            <span>Full Name</span>
+                            <span id="profileFullName">Ananya Sharma</span>
+                        </div>
+                        <div class="profile-item">
+                            <span>Email Address</span>
+                            <span id="profileEmail">ananya@example.com</span>
+                        </div>
+                        <div class="profile-item">
+                            <span>Phone Number</span>
+                            <span id="profilePhone">+91 98765 43210</span>
+                        </div>
+                        <div class="profile-item">
+                            <span>Emergency Contacts</span>
+                            <span id="profileGuardianCount">1/1</span>
+                        </div>
+                        <div class="profile-item">
+                            <span>Subscription Plan</span>
+                            <span id="profilePlan">Free</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="sosCount">0</div>
+                            <div class="stat-label">SOS Used</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="safeDays">45</div>
+                            <div class="stat-label">Safe Days</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="riskScans">128</div>
+                            <div class="stat-label">Risk Scans</div>
+                        </div>
+                    </div>
+
+                    <div class="settings-list">
+                        <h3 style="margin: 20px 0 15px 0; font-size: 18px;">Account Settings</h3>
+                        <div class="setting-item" onclick="changePassword()">
+                            <i class="fas fa-key"></i>
+                            <div>
+                                <strong>Change Password</strong>
+                                <p>Update your account password</p>
+                            </div>
+                        </div>
+                        <div class="setting-item" onclick="showNotificationSettings()">
+                            <i class="fas fa-bell"></i>
+                            <div>
+                                <strong>Notifications</strong>
+                                <p>Manage alerts and notifications</p>
+                            </div>
+                        </div>
+                        <div class="setting-item" onclick="showPrivacySettings()">
+                            <i class="fas fa-lock"></i>
+                            <div>
+                                <strong>Privacy & Security</strong>
+                                <p>Control your data and privacy</p>
+                            </div>
+                        </div>
+                        <div class="setting-item" onclick="showAppearanceSettings()">
+                            <i class="fas fa-palette"></i>
+                            <div>
+                                <strong>Appearance</strong>
+                                <p>Customize theme and layout</p>
+                            </div>
+                        </div>
+                        <div class="setting-item" onclick="showHelpSupport()">
+                            <i class="fas fa-question-circle"></i>
+                            <div>
+                                <strong>Help & Support</strong>
+                                <p>Get help and contact support</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="logout()" style="background: #ff5252; color: white; border: none; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 25px; transition: opacity 0.3s;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div class="modal" id="editProfileModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-edit"></i> Edit Profile</h2>
+                    <button class="close-btn" onclick="closeModal('editProfileModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProfileForm">
+                        <div class="input-group">
+                            <label class="input-label">Full Name</label>
+                            <input type="text" class="input-field" id="editFullName" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Email Address</label>
+                            <input type="email" class="input-field" id="editEmail" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Phone Number</label>
+                            <input type="tel" class="input-field" id="editPhone" placeholder="+91 XXXXX XXXXXX" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Date of Birth</label>
+                            <input type="date" class="input-field" id="editDOB">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Emergency Contact Person</label>
+                            <input type="text" class="input-field" id="editEmergencyContact" placeholder="Name of emergency contact">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Address (Optional)</label>
+                            <textarea class="input-field" id="editAddress" placeholder="Enter your address" rows="3"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="auth-btn" style="margin-top: 20px;">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        
+                        <button type="button" class="auth-btn" onclick="closeModal('editProfileModal')" style="background: #6c757d; margin-top: 10px;">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Password Modal -->
+        <div class="modal" id="changePasswordModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-key"></i> Change Password</h2>
+                    <button class="close-btn" onclick="closeModal('changePasswordModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="changePasswordForm">
+                        <div class="input-group">
+                            <label class="input-label">Current Password</label>
+                            <input type="password" class="input-field" id="currentPassword" placeholder="Enter current password" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">New Password</label>
+                            <input type="password" class="input-field" id="newPassword" placeholder="Enter new password" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Confirm New Password</label>
+                            <input type="password" class="input-field" id="confirmPassword" placeholder="Confirm new password" required>
+                        </div>
+                        
+                        <div class="input-group" style="margin-top: 20px;">
+                            <label style="display: flex; align-items: center; font-size: 16px; color: #666;">
+                                <input type="checkbox" id="showPassword" style="margin-right: 10px;" onchange="togglePasswordVisibility()">
+                                Show Passwords
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="auth-btn" style="margin-top: 20px;">
+                            <i class="fas fa-save"></i> Update Password
+                        </button>
+                        
+                        <button type="button" class="auth-btn" onclick="closeModal('changePasswordModal')" style="background: #6c757d; margin-top: 10px;">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Modal -->
+        <div class="modal" id="mapModal">
+            <div class="modal-content" style="max-height: 85vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-map"></i> Safe Route Navigation</h2>
+                    <button class="close-btn" onclick="closeModal('mapModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="mapContainer">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learn Modal -->
+        <div class="modal" id="learnModal">
+            <div class="modal-content" style="max-height: 85vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-graduation-cap"></i> Learn & Empower</h2>
+                    <button class="close-btn" onclick="closeModal('learnModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="learn-categories">
+                        <div class="learn-category active" onclick="switchLearnCategory('self_defense')">Self Defense</div>
+                        <div class="learn-category" onclick="switchLearnCategory('safety_tricks')">Safety Tricks</div>
+                        <div class="learn-category" onclick="switchLearnCategory('learn_tricks')">Learn Tricks</div>
+                        <div class="learn-category" onclick="switchLearnCategory('videos')">Videos</div>
+                    </div>
+
+                    <!-- Self Defense Content -->
+                    <div id="self_defenseContent" class="learn-content active">
+                        <div class="article-card free">
+                            <h4><i class="fas fa-hand-rock"></i> Basic Self Defense Moves</h4>
+                            <p><strong>Palm Strike:</strong> Use the heel of your palm to strike the attacker's nose or chin. This move uses your body weight for maximum impact.</p>
+                            <p><strong>Eye Jab:</strong> Use your fingers to jab the attacker's eyes. This creates an opportunity to escape.</p>
+                            <p><strong>Knee Strike:</strong> Target the groin area with your knee. This is highly effective for creating distance.</p>
+                        </div>
+                        
+                        <div class="article-card free">
+                            <h4><i class="fas fa-running"></i> Escape Techniques</h4>
+                            <p><strong>Break Wrist Hold:</strong> Twist your arm in the direction of the attacker's thumb (weakest point) and pull away.</p>
+                            <p><strong>Bear Hug Escape:</strong> Drop your weight, stomp on their foot, and elbow their ribs before running.</p>
+                            <p><strong>Choke Hold Escape:</strong> Tuck your chin, turn into the attacker, and use your elbow to strike.</p>
+                        </div>
+                        
+                        <div class="article-card free">
+                            <h4><i class="fas fa-tools"></i> Everyday Objects as Weapons</h4>
+                            <p><strong>Keys:</strong> Hold between fingers to use as a striking tool.</p>
+                            <p><strong>Pen/Pencil:</strong> Can be used to stab soft areas.</p>
+                            <p><strong>Handbag:</strong> Swing with force to create distance.</p>
+                            <p><strong>Mobile Phone:</strong> Use the hard edges to strike.</p>
+                        </div>
+                    </div>
+
+                    <!-- Safety Tricks Content -->
+                    <div id="safety_tricksContent" class="learn-content">
+                        <div class="article-card free">
+                            <h4><i class="fas fa-walking"></i> Walking Safety Tricks</h4>
+                            <p><strong>Always walk against traffic</strong> so you can see approaching vehicles.</p>
+                            <p><strong>Carry a whistle or personal alarm</strong> that can be easily activated.</p>
+                            <p><strong>Use reflective tape</strong> on your bag or clothes when walking at night.</p>
+                            <p><strong>Keep your phone in your hand</strong> with emergency number ready to dial.</p>
+                        </div>
+                        
+                        <div class="article-card free">
+                            <h4><i class="fas fa-car"></i> Car Safety Tricks</h4>
+                            <p><strong>Check backseat before entering</strong> your vehicle.</p>
+                            <p><strong>Keep doors locked</strong> while driving or parked.</p>
+                            <p><strong>Park in well-lit areas</strong> close to entrances.</p>
+                            <p><strong>Have keys ready</strong> before reaching your car.</p>
+                        </div>
+                        
+                        <div class="article-card free">
+                            <h4><i class="fas fa-home"></i> Home Safety Tricks</h4>
+                            <p><strong>Use peephole</strong> before opening the door.</p>
+                            <p><strong>Have emergency numbers</strong> saved on speed dial.</p>
+                            <p><strong>Keep a safety kit</strong> near exits.</p>
+                            <p><strong>Install security cameras</strong> at entry points.</p>
+                        </div>
+                    </div>
+
+                    <!-- Learn Tricks Content -->
+                    <div id="learn_tricksContent" class="learn-content">
+                        <div class="article-card free">
+                            <h4><i class="fas fa-lightbulb"></i> Quick Thinking Tricks</h4>
+                            <p><strong>Act confidently:</strong> Walk with purpose even if you're lost.</p>
+                            <p><strong>Use code words:</strong> Establish code words with friends/family for dangerous situations.</p>
+                            <p><strong>Pretend to know someone:</strong> If being followed, approach a group and pretend to know them.</p>
+                            <p><strong>Create distractions:</strong> Drop items if being followed to create noise and attention.</p>
+                        </div>
+                        
+                        <div class="article-card free">
+                            <h4><i class="fas fa-mobile-alt"></i> Phone Safety Tricks</h4>
+                            <p><strong>Use emergency SOS:</strong> Most phones have emergency SOS features - learn them.</p>
+                            <p><strong>Location sharing:</strong> Always share live location with trusted contacts.</p>
+                            <p><strong>Offline maps:</strong> Download maps for offline use.</p>
+                            <p><strong>Voice commands:</strong> Use voice commands to call for help hands-free.</p>
+                        </div>
+                        
+                        <div class="article-card free">
+                            <h4><i class="fas fa-users"></i> Social Tricks</h4>
+                            <p><strong>Trust your instincts:</strong> If something feels wrong, it probably is.</p>
+                            <p><strong>Never reveal travel plans</strong> to strangers.</p>
+                            <p><strong>Keep personal information private</strong> on social media.</p>
+                            <p><strong>Have a buddy system</strong> when going out.</p>
+                        </div>
+                    </div>
+
+                    <!-- Videos Content -->
+                    <div id="videosContent" class="learn-content">
+                        <div class="video-card">
+                            <div class="video-thumbnail">
+                                <i class="fas fa-play-circle"></i>
+                                <div class="video-duration">5:30</div>
+                            </div>
+                            <div class="video-info">
+                                <h4>Basic Self Defense Techniques</h4>
+                                <p>Learn essential moves every woman should know</p>
+                            </div>
+                        </div>
+                        
+                        <div class="video-card">
+                            <div class="video-thumbnail">
+                                <i class="fas fa-play-circle"></i>
+                                <div class="video-locked" id="videoLock1">
+                                    <i class="fas fa-lock"></i> Premium
+                                </div>
+                                <div class="video-duration">8:15</div>
+                            </div>
+                            <div class="video-info">
+                                <h4>Advanced Combat Training</h4>
+                                <p>Professional self defense techniques by experts</p>
+                            </div>
+                        </div>
+                        
+                        <div class="video-card">
+                            <div class="video-thumbnail">
+                                <i class="fas fa-play-circle"></i>
+                                <div class="video-locked" id="videoLock2">
+                                    <i class="fas fa-lock"></i> Premium
+                                </div>
+                                <div class="video-duration">6:45</div>
+                            </div>
+                            <div class="video-info">
+                                <h4>Mental Strength & Awareness</h4>
+                                <p>Building confidence and situational awareness</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guardians Modal -->
+        <div class="modal" id="guardiansModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-users"></i> Emergency Guardians</h2>
+                    <button class="close-btn" onclick="closeModal('guardiansModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="guardianLimitWarning" class="guardian-limit" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i> Free plan allows only 1 guardian. Upgrade for up to 5 guardians.
+                    </div>
+                    
+                    <div id="guardiansList">
+                        <!-- Dynamic content -->
+                    </div>
+                    
+                    <div id="addGuardianForm" style="margin-top: 20px;">
+                        <input type="text" id="guardianName" placeholder="Guardian Name" style="width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 16px;" />
+                        <input type="tel" id="guardianPhone" placeholder="Phone Number" style="width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 16px;" />
+                        <button class="subscribe-btn" onclick="addGuardian()" id="addGuardianBtn">
+                            <i class="fas fa-plus"></i> Add Guardian
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fake Call Modal -->
+        <div class="modal" id="fakeCallModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-phone"></i> Fake Call</h2>
+                    <button class="close-btn" onclick="endFakeCall()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="fake-call-screen" id="fakeCallScreen">
+                        <div class="caller-info">
+                            <div class="caller-name" id="fakeCallerName">Mom</div>
+                            <div class="caller-number" id="fakeCallerNumber">+91 98765 43210</div>
+                        </div>
+                        <div class="call-time" id="fakeCallTime">00:00</div>
+                        <div class="call-controls">
+                            <button class="call-control-btn accept" onclick="acceptFakeCall()">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                            <button class="call-control-btn" onclick="endFakeCall()">
+                                <i class="fas fa-phone-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h4>Choose Fake Call Contact:</h4>
+                        <select id="fakeCallContact" style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; margin: 10px 0; font-size: 16px;">
+                            <option value="Mom">Mom</option>
+                            <option value="Dad">Dad</option>
+                            <option value="Brother">Brother</option>
+                            <option value="Friend">Friend</option>
+                            <option value="Boss">Boss</option>
+                        </select>
+                        <button class="subscribe-btn" onclick="startFakeCall()" style="margin-top: 10px;">
+                            <i class="fas fa-phone"></i> Start Fake Call
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Safe Places Modal -->
+        <div class="modal" id="safePlacesModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-hospital"></i> Nearby Safe Places</h2>
+                    <button class="close-btn" onclick="closeModal('safePlacesModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="safePlacesList">
+                        <!-- Dynamic content -->
+                    </div>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="map-btn" onclick="getDirectionsToNearestSafePlace()" style="width: 100%;">
+                            <i class="fas fa-directions"></i> Get Directions to Nearest Safe Place
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modals -->
+        <div class="modal settings-modal" id="notificationSettingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-bell"></i> Notification Settings</h2>
+                    <button class="close-btn" onclick="closeModal('notificationSettingsModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-item">
+                        <div>
+                            <strong>SOS Alerts</strong>
+                            <p>Emergency notification sounds</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sosAlerts" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <strong>Risk Alerts</strong>
+                            <p>Notifications for high-risk areas</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="riskAlerts" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <strong>Location Updates</strong>
+                            <p>Regular location sharing notifications</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="locationUpdates" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <strong>Safety Tips</strong>
+                            <p>Daily safety tips and reminders</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="safetyTips" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <strong>Vibration</strong>
+                            <p>Vibrate on notifications</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="vibration" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <button class="subscribe-btn" onclick="saveNotificationSettings()" style="margin-top: 20px;">
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal settings-modal" id="privacySettingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-lock"></i> Privacy & Security</h2>
+                    <button class="close-btn" onclick="closeModal('privacySettingsModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-item">
+                        <div>
+                            <strong>Location Sharing</strong>
+                            <p>Share location with emergency contacts</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="locationSharing" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <strong>App Lock</strong>
+                            <p>Require PIN to open app</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="appLock">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <strong>Data Backup</strong>
+                            <p>Backup data to cloud</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dataBackup" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <strong>Incognito Mode</strong>
+                            <p>Hide app usage from phone history</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="incognitoMode">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <button class="subscribe-btn" onclick="savePrivacySettings()" style="margin-top: 20px;">
+                        Save Privacy Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal settings-modal" id="appearanceSettingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-palette"></i> Appearance Settings</h2>
+                    <button class="close-btn" onclick="closeModal('appearanceSettingsModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4>Theme Color</h4>
+                    <div class="theme-options">
+                        <div class="theme-option light selected" onclick="selectTheme('light')">
+                            <i class="fas fa-sun"></i>
+                            <div>Light</div>
+                        </div>
+                        <div class="theme-option dark" onclick="selectTheme('dark')">
+                            <i class="fas fa-moon"></i>
+                            <div>Dark</div>
+                        </div>
+                        <div class="theme-option pink" onclick="selectTheme('pink')">
+                            <i class="fas fa-heart"></i>
+                            <div>Pink</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <h4>Font Size</h4>
+                        <input type="range" id="fontSize" min="12" max="20" value="16" style="width: 100%; margin: 15px 0;">
+                    </div>
+                    
+                    <button class="subscribe-btn" onclick="saveAppearanceSettings()" style="margin-top: 20px;">
+                        Apply Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal settings-modal" id="helpSupportModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-question-circle"></i> Help & Support</h2>
+                    <button class="close-btn" onclick="closeModal('helpSupportModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="article-card">
+                        <h4><i class="fas fa-phone-alt"></i> Emergency Helpline</h4>
+                        <p><strong>Women Helpline:</strong> 1091 / 181</p>
+                        <p><strong>Police:</strong> 100</p>
+                        <p><strong>Ambulance:</strong> 102</p>
+                        <button onclick="callNumber('1091')" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; margin-top: 15px; cursor: pointer; width: 100%; font-size: 16px;">
+                            <i class="fas fa-phone"></i> Call Women Helpline
+                        </button>
+                    </div>
+                    
+                    <div class="article-card">
+                        <h4><i class="fas fa-envelope"></i> Contact Support</h4>
+                        <p><strong>Email:</strong> support@shesecure.com</p>
+                        <p><strong>Phone:</strong> +91 1800-123-4567</p>
+                        <button onclick="sendSupportEmail()" style="background: #2196f3; color: white; border: none; padding: 12px 20px; border-radius: 12px; margin-top: 15px; cursor: pointer; width: 100%; font-size: 16px;">
+                            <i class="fas fa-envelope"></i> Email Support
+                        </button>
+                    </div>
+                    
+                    <div class="article-card">
+                        <h4><i class="fas fa-book"></i> FAQ & Tutorials</h4>
+                        <p>Check our online tutorials and frequently asked questions.</p>
+                        <button onclick="openTutorials()" style="background: #4caf50; color: white; border: none; padding: 12px 20px; border-radius: 12px; margin-top: 15px; cursor: pointer; width: 100%; font-size: 16px;">
+                            <i class="fas fa-graduation-cap"></i> View Tutorials
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscription Modal -->
+        <div class="modal subscription-modal" id="subscriptionModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-crown"></i> Upgrade Your Safety</h2>
+                    <button class="close-btn" onclick="closeModal('subscriptionModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="text-align: center; margin-bottom: 20px; font-size: 16px;">Choose the plan that fits your safety needs</p>
+                    
+                    <div class="plan-container">
+                        <!-- Free Plan -->
+                        <div class="plan-card free">
+                            <div class="plan-header">
+                                <div class="plan-title">Free Plan</div>
+                                <div class="plan-badge-small badge-free">CURRENT</div>
+                            </div>
+                            <ul class="plan-features">
+                                <li><i class="fas fa-check"></i> 1 Emergency Guardian</li>
+                                <li><i class="fas fa-check"></i> Basic SOS Alert</li>
+                                <li><i class="fas fa-check"></i> Risk Scanner</li>
+                                <li><i class="fas fa-times"></i> <strong>No Map Navigation</strong></li>
+                                <li><i class="fas fa-times"></i> No Safe Route Planning</li>
+                                <li><i class="fas fa-times"></i> No Video Content</li>
+                            </ul>
+                            <div class="plan-price">
+                                <div class="price-box selected" onclick="selectPrice('free')">
+                                    <div class="price-amount">₹0</div>
+                                    <div class="price-duration">Free Forever</div>
+                                </div>
+                            </div>
+                            <button class="subscribe-btn" onclick="selectPlan('free')">
+                                Continue Free Plan
+                            </button>
+                        </div>
+
+                        <!-- Premium with Ads -->
+                        <div class="plan-card premium-ad">
+                            <div class="plan-header">
+                                <div class="plan-title">Premium with Ads</div>
+                                <div class="plan-badge-small badge-premium-ad">POPULAR</div>
+                            </div>
+                            <ul class="plan-features">
+                                <li><i class="fas fa-check"></i> <strong>5 Emergency Guardians</strong></li>
+                                <li><i class="fas fa-check"></i> Full Map Navigation</li>
+                                <li><i class="fas fa-check"></i> Safe Route Planning</li>
+                                <li><i class="fas fa-check"></i> Find Safe Spots</li>
+                                <li><i class="fas fa-check"></i> Live Location Sharing</li>
+                                <li><i class="fas fa-check"></i> Video Content (with Ads)</li>
+                                <li><i class="fas fa-times"></i> Contains Ads</li>
+                            </ul>
+                            <div class="plan-price">
+                                <div class="price-box" id="premiumAdMonthly" onclick="selectPrice('premiumAd', 'monthly')">
+                                    <div class="price-amount">₹199</div>
+                                    <div class="price-duration">Per Month</div>
+                                </div>
+                                <div class="price-box" id="premiumAdYearly" onclick="selectPrice('premiumAd', 'yearly')">
+                                    <div class="price-amount">₹1,599</div>
+                                    <div class="price-duration">Per Year</div>
+                                    <div class="price-save">Save ₹789</div>
+                                </div>
+                            </div>
+                            <button class="subscribe-btn" onclick="selectPlan('premiumAd')" style="background: linear-gradient(45deg, #ff9800, #ff5722);">
+                                <i class="fas fa-bolt"></i> UPGRADE TO PREMIUM
+                            </button>
+                        </div>
+
+                        <!-- Premium No Ads -->
+                        <div class="plan-card premium-no-ad">
+                            <div class="plan-header">
+                                <div class="plan-title">Premium No Ads</div>
+                                <div class="plan-badge-small badge-premium-no-ad">BEST VALUE</div>
+                            </div>
+                            <ul class="plan-features">
+                                <li><i class="fas fa-check"></i> <strong>5 Emergency Guardians</strong></li>
+                                <li><i class="fas fa-check"></i> Full Map Navigation</li>
+                                <li><i class="fas fa-check"></i> Safe Route Planning</li>
+                                <li><i class="fas fa-check"></i> Find Safe Spots</li>
+                                <li><i class="fas fa-check"></i> Live Location Sharing</li>
+                                <li><i class="fas fa-check"></i> Video Content (No Ads)</li>
+                                <li><i class="fas fa-check"></i> <strong>No Ads Experience</strong></li>
+                            </ul>
+                            <div class="plan-price">
+                                <div class="price-box" id="premiumNoAdMonthly" onclick="selectPrice('premiumNoAd', 'monthly')">
+                                    <div class="price-amount">₹399</div>
+                                    <div class="price-duration">Per Month</div>
+                                </div>
+                                <div class="price-box" id="premiumNoAdYearly" onclick="selectPrice('premiumNoAd', 'yearly')">
+                                    <div class="price-amount">₹2,599</div>
+                                    <div class="price-duration">Per Year</div>
+                                    <div class="price-save">Save ₹2,189</div>
+                                </div>
+                            </div>
+                            <button class="subscribe-btn" onclick="selectPlan('premiumNoAd')" style="background: linear-gradient(45deg, #9c27b0, #673ab7);">
+                                <i class="fas fa-crown"></i> GET PREMIUM NO ADS
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+  
+</body>
+</html>
