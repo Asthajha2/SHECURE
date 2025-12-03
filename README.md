@@ -51,7 +51,7 @@ Leaflet for interactive maps and markers, using OpenStreetMap tiles.​
 Font Awesome for icons and Google Fonts (Poppins) for typography.​
 
 Getting Started​
-Clone or download the project and place the HTML file (from paste.txt) into your project folder, for example as index.html.​
+Clone or download the project and place the HTML file  into your project folder, for example as index.html.​
 
 Ensure you have an internet connection for the external CDNs:
 
@@ -63,16 +63,15 @@ Leaflet CSS/JS
 
 OpenStreetMap tiles through Leaflet​
 
-Open index.html directly in a modern browser, or serve it via a simple static server (for example, VS Code Live Server or python -m http.server).​
+Open index.html directly in a modern browser, or serve it via a simple static server
 
 The splash screen will run, then you will be taken to login or signup depending on the saved auth state.​
 
 Usage Notes​
-Default demo account: email demo@demo.com and password demo123 if no local user profile exists.​
 
 All data is stored locally in the browser using keys such as shesecure_authenticated, shesecure_userProfile, and shesecure_settings.​
 
-Map-based safe routing and some learning videos are locked for the Free plan; upgrading inside the UI flips internal plan flags and unlocks features (no real payment integration yet).​
+Map-based safe routing and some learning videos are locked for the Free plan; upgrading inside the UI flips internal plan flags and unlocks features .​
 
 SOS, map, and safe places features depend on geolocation and should be tested over HTTPS or localhost for full browser support.​
 
