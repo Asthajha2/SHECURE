@@ -5,7 +5,8 @@ Below is a concise README you can put as README.md (modify project name/credits 
 #SHECURE – Women Safety Web App​
 SHECURE is a mobile-first, single-page web application designed to help women stay safe using an SOS system, AI-style risk visualization, location-based safe places, and learning resources for self-defense and safety tricks.​
 
-Features​
+Features:
+​
 Splash screen with animated shield icon and staged loading messages.​
 
 Authentication flow: login and signup screens with email/phone, password validation, and a demo account fallback.​
