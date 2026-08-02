@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.CSS">
-   
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <!-- ========== SPLASH SCREEN ========== -->
@@ -165,26 +164,107 @@
             <div class="plan-badge" id="planBadge">FREE</div>
             <h1><i class="fas fa-shield-alt"></i> SHECURE</h1>
             <p>AI-Powered Women Safety App</p>
+            <p class="header-greeting" id="headerGreeting">Hello there 👋</p>
         </div>
 
-        <!-- Risk Level -->
-        <div class="risk-card">
+        <!-- Dashboard Overview Tiles -->
+        <div class="dashboard-tiles" id="dashboardTiles">
+            <div class="dash-tile" onclick="document.querySelector('.safety-score-card').scrollIntoView({behavior:'smooth'})">
+                <i class="fas fa-shield-heart"></i>
+                <span class="dash-tile-value" id="dashSafetyScore">82</span>
+                <span class="dash-tile-label">Safety Score</span>
+            </div>
+            <div class="dash-tile" id="dashWeatherTile">
+                <i class="fas fa-cloud-sun"></i>
+                <span class="dash-tile-value" id="dashWeather">Clear</span>
+                <span class="dash-tile-label">Weather</span>
+            </div>
+            <div class="dash-tile" onclick="showSafePlacesModal()">
+                <i class="fas fa-hospital"></i>
+                <span class="dash-tile-value" id="dashSafePlaces">3</span>
+                <span class="dash-tile-label">Safe Places</span>
+            </div>
+            <div class="dash-tile" onclick="showJourneyModal()">
+                <i class="fas fa-route"></i>
+                <span class="dash-tile-value" id="dashJourneyStatus">Inactive</span>
+                <span class="dash-tile-label">Journey</span>
+            </div>
+            <div class="dash-tile" onclick="showCommunityMapModal()">
+                <i class="fas fa-users"></i>
+                <span class="dash-tile-value" id="dashCommunityAlerts">2</span>
+                <span class="dash-tile-label">Nearby Alerts</span>
+            </div>
+        </div>
+
+        <!-- Home Widgets: Quick Access Cards -->
+        <div class="home-widgets-row" id="homeWidgetsRow">
+            <div class="home-widget-card sos" onclick="startSOSTimer()">
+                <div class="hw-icon"><i class="fas fa-bell"></i></div>
+                <p>SOS</p>
+            </div>
+            <div class="home-widget-card journey" onclick="showJourneyModal()">
+                <div class="hw-icon"><i class="fas fa-route"></i></div>
+                <p>Journey</p>
+            </div>
+            <div class="home-widget-card police" onclick="showNearbyPolice()">
+                <div class="hw-icon"><i class="fas fa-shield-alt"></i></div>
+                <p>Nearby Police</p>
+            </div>
+            <div class="home-widget-card chat" onclick="showChatModal()">
+                <div class="hw-icon"><i class="fas fa-robot"></i></div>
+                <p>AI Chat</p>
+            </div>
+            <div class="home-widget-card community" onclick="showCommunityMapModal()">
+                <div class="hw-icon"><i class="fas fa-map-location-dot"></i></div>
+                <p>Community</p>
+            </div>
+            <div class="home-widget-card report" onclick="showIncidentModal()">
+                <div class="hw-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                <p>Report</p>
+            </div>
+        </div>
+
+        <!-- AI Safety Score -->
+        <div class="risk-card safety-score-card">
             <div class="risk-header">
                 <i class="fas fa-brain"></i>
                 <div>
-                    <h2>AI Risk Scanner</h2>
-                    <p>Analyzing surroundings</p>
+                    <h2>AI Safety Score</h2>
+                    <p>Analyzing surroundings in real time</p>
                 </div>
             </div>
-            <div class="risk-level">
-                <div class="risk-status">
-                    <span>Low Risk</span>
-                    <span id="riskPercent">30%</span>
+            <div class="safety-score-body">
+                <div class="safety-score-ring-wrap">
+                    <svg class="safety-score-ring" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="52" class="ring-bg"></circle>
+                        <circle cx="60" cy="60" r="52" class="ring-fill" id="safetyScoreRing"></circle>
+                    </svg>
+                    <div class="safety-score-num">
+                        <span id="safetyScoreValue">82</span>
+                        <small>/100</small>
+                    </div>
                 </div>
-                <div class="risk-bar">
-                    <div class="risk-fill" id="riskFill"></div>
+                <div class="safety-score-info">
+                    <div class="safety-score-status" id="safetyScoreStatus">
+                        <span class="dot"></span> Safe
+                    </div>
+                    <div class="risk-bar">
+                        <div class="risk-fill" id="riskFill"></div>
+                    </div>
+                    <p id="riskMessage">✅ Area appears safe</p>
                 </div>
-                <p id="riskMessage">✅ Area appears safe</p>
+            </div>
+            <div class="safety-score-why">
+                <strong><i class="fas fa-circle-question"></i> Why?</strong>
+                <ul id="safetyScoreReasons">
+                    <li><i class="fas fa-check"></i> Area is crowded</li>
+                    <li><i class="fas fa-check"></i> Police station within 700 m</li>
+                    <li><i class="fas fa-check"></i> Low community reports</li>
+                    <li><i class="fas fa-check"></i> Good lighting</li>
+                </ul>
+            </div>
+            <div class="safety-score-recommendation" id="safetyScoreRecommendation">
+                <i class="fas fa-route"></i> <span><strong>Recommendation:</strong> Continue on current route.</span>
             </div>
         </div>
 
@@ -243,27 +323,60 @@
                         <i class="fas fa-users"></i>
                         <p>Guardians</p>
                     </div>
+                    <div class="action-card" onclick="showJourneyModal()">
+                        <i class="fas fa-person-walking-luggage"></i>
+                        <p>Journey Mode</p>
+                    </div>
+                    <div class="action-card" onclick="showCommunityMapModal()">
+                        <i class="fas fa-map-location-dot"></i>
+                        <p>Community Map</p>
+                    </div>
+                    <div class="action-card" onclick="showChatModal()">
+                        <i class="fas fa-robot"></i>
+                        <p>AI Assistant</p>
+                    </div>
+                    <div class="action-card" onclick="showIncidentModal()">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        <p>Report Incident</p>
+                    </div>
+                    <div class="action-card" onclick="showCheckinModal()">
+                        <i class="fas fa-clock"></i>
+                        <p>Smart Check-in</p>
+                    </div>
+                    <div class="action-card" onclick="showVaultModal()">
+                        <i class="fas fa-box-archive"></i>
+                        <p>Evidence Vault</p>
+                    </div>
+                    <div class="action-card" onclick="showLegalHelpModal()">
+                        <i class="fas fa-scale-balanced"></i>
+                        <p>Legal Help</p>
+                    </div>
+                    <div class="action-card" onclick="showAchievementsModal()">
+                        <i class="fas fa-trophy"></i>
+                        <p>Achievements</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Safety Tip -->
+            <!-- AI Safety Tip -->
             <div class="safety-tip">
-                <i class="fas fa-lightbulb"></i>
+                <span class="safety-tip-badge" id="safetyTipBadge">MORNING</span>
+                <i class="fas fa-lightbulb" id="safetyTipIcon"></i>
                 <div>
-                    <strong>Safety Tip:</strong> Use Fake Call feature if you feel someone is following you.
+                    <strong>AI Safety Tip:</strong> <span id="safetyTipText">Use Fake Call feature if you feel someone is following you.</span>
                 </div>
             </div>
         </div>
 
         <!-- Bottom Navigation with SOS Button -->
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="showHome()">
+            <div class="nav-item active" id="navHomeItem" onclick="showHome()">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </div>
-            <div class="nav-item" onclick="showMapModal()">
-                <i class="fas fa-map-marked-alt"></i>
-                <span>Map</span>
+            <div class="nav-item" onclick="showJourneyModal()">
+                <i class="fas fa-route"></i>
+                <span>Journey</span>
             </div>
                         
             <!-- SOS Navigation Button (Center) -->
@@ -273,9 +386,9 @@
                 </button>
             </div>
             
-            <div class="nav-item" onclick="showLearnModal()">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Learn</span>
+            <div class="nav-item" onclick="showChatModal()">
+                <i class="fas fa-robot"></i>
+                <span>Assistant</span>
             </div>
             <div class="nav-item" onclick="showGuardiansModal()">
                 <i class="fas fa-shield-alt"></i>
@@ -320,9 +433,33 @@
                             <span>Emergency Contacts</span>
                             <span id="profileGuardianCount">1/1</span>
                         </div>
+                        <div class="profile-item" style="cursor:pointer;" onclick="closeModal('profileModal'); showGuardiansModal();">
+                            <span>Trusted Guardians</span>
+                            <span id="profileTrustedGuardians">1 <i class="fas fa-chevron-right" style="font-size:11px; color:#ccc;"></i></span>
+                        </div>
                         <div class="profile-item">
                             <span>Subscription Plan</span>
                             <span id="profilePlan">Free</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 25px 0 5px 0; font-size: 18px;"><i class="fas fa-notes-medical"></i> Medical Info</h3>
+                    <div class="medical-info-grid">
+                        <div class="medical-info-box">
+                            <span class="mib-label">Blood Group</span>
+                            <span class="blood-group-chip" id="profileBloodGroup">O+</span>
+                        </div>
+                        <div class="medical-info-box">
+                            <span class="mib-label">Emergency Contact</span>
+                            <span class="mib-value" id="profileEmergencyContactName">Mom</span>
+                        </div>
+                        <div class="medical-info-box wide">
+                            <span class="mib-label">Allergies</span>
+                            <span class="mib-value" id="profileAllergies">None known</span>
+                        </div>
+                        <div class="medical-info-box wide">
+                            <span class="mib-label">Medical Conditions</span>
+                            <span class="mib-value" id="profileMedicalConditions">None</span>
                         </div>
                     </div>
 
@@ -341,8 +478,53 @@
                         </div>
                     </div>
 
+                    <h3 style="margin: 25px 0 5px 0; font-size: 18px;"><i class="fas fa-chart-simple"></i> Personal Safety Analytics</h3>
+                    <div class="analytics-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="analyticsJourneys">0</div>
+                            <div class="stat-label">Journeys</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="analyticsAlerts">0</div>
+                            <div class="stat-label">Emergency Alerts</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="analyticsSafeRoutes">0</div>
+                            <div class="stat-label">Safe Routes Used</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="analyticsReports">0</div>
+                            <div class="stat-label">Community Reports</div>
+                        </div>
+                        <div class="stat-box wide">
+                            <div class="stat-value" id="analyticsAvgScore">82</div>
+                            <div class="stat-label">Average Safety Score</div>
+                        </div>
+                    </div>
+
                     <div class="settings-list">
                         <h3 style="margin: 20px 0 15px 0; font-size: 18px;">Account Settings</h3>
+                        <div class="setting-item" onclick="showLegalHelpModal()">
+                            <i class="fas fa-scale-balanced"></i>
+                            <div>
+                                <strong>Women's Legal Help</strong>
+                                <p>Know your rights, laws & emergency helplines</p>
+                            </div>
+                        </div>
+                        <div class="setting-item" onclick="showEmergencyPreferences()">
+                            <i class="fas fa-sliders"></i>
+                            <div>
+                                <strong>Emergency Preferences</strong>
+                                <p>Customize how SOS & alerts behave</p>
+                            </div>
+                        </div>
+                        <div class="setting-item" onclick="showAchievementsModal()">
+                            <i class="fas fa-trophy"></i>
+                            <div>
+                                <strong>Achievements</strong>
+                                <p>Track your safety milestones & badges</p>
+                            </div>
+                        </div>
                         <div class="setting-item" onclick="changePassword()">
                             <i class="fas fa-key"></i>
                             <div>
@@ -424,6 +606,33 @@
                         <div class="input-group">
                             <label class="input-label">Address (Optional)</label>
                             <textarea class="input-field" id="editAddress" placeholder="Enter your address" rows="3"></textarea>
+                        </div>
+
+                        <h3 style="margin: 20px 0 10px 0; font-size: 16px; color: var(--dark);"><i class="fas fa-notes-medical"></i> Medical Info (for emergencies)</h3>
+
+                        <div class="input-group">
+                            <label class="input-label">Blood Group</label>
+                            <select class="input-field" id="editBloodGroup">
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label">Allergies</label>
+                            <textarea class="input-field" id="editAllergies" placeholder="e.g. Penicillin, Peanuts" rows="2"></textarea>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label">Medical Conditions</label>
+                            <textarea class="input-field" id="editMedicalConditions" placeholder="e.g. Asthma, Diabetes" rows="2"></textarea>
                         </div>
                         
                         <button type="submit" class="auth-btn" style="margin-top: 20px;">
@@ -654,6 +863,13 @@
                     <div id="addGuardianForm" style="margin-top: 20px;">
                         <input type="text" id="guardianName" placeholder="Guardian Name" style="width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 16px;" />
                         <input type="tel" id="guardianPhone" placeholder="Phone Number" style="width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 16px;" />
+                        <select id="guardianRelation" style="width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 16px; background: white;">
+                            <option value="Parent">Parent</option>
+                            <option value="Sibling">Sibling</option>
+                            <option value="Friend">Friend</option>
+                            <option value="Partner">Partner</option>
+                            <option value="Emergency Contact">Other</option>
+                        </select>
                         <button class="subscribe-btn" onclick="addGuardian()" id="addGuardianBtn">
                             <i class="fas fa-plus"></i> Add Guardian
                         </button>
@@ -710,6 +926,17 @@
                     <button class="close-btn" onclick="closeModal('safePlacesModal')">&times;</button>
                 </div>
                 <div class="modal-body">
+                    <div class="places-filter-row" id="placesFilterRow">
+                        <div class="places-filter-chip active" data-type="all" onclick="filterSafePlaces('all')">All</div>
+                        <div class="places-filter-chip" data-type="police" onclick="filterSafePlaces('police')"><i class="fas fa-shield-alt"></i> Police</div>
+                        <div class="places-filter-chip" data-type="hospital" onclick="filterSafePlaces('hospital')"><i class="fas fa-hospital"></i> Hospital</div>
+                        <div class="places-filter-chip" data-type="pharmacy" onclick="filterSafePlaces('pharmacy')"><i class="fas fa-pills"></i> Pharmacy</div>
+                        <div class="places-filter-chip" data-type="metro" onclick="filterSafePlaces('metro')"><i class="fas fa-train-subway"></i> Metro</div>
+                        <div class="places-filter-chip" data-type="petrol" onclick="filterSafePlaces('petrol')"><i class="fas fa-gas-pump"></i> Petrol</div>
+                        <div class="places-filter-chip" data-type="restaurant" onclick="filterSafePlaces('restaurant')"><i class="fas fa-utensils"></i> Restaurant</div>
+                        <div class="places-filter-chip" data-type="women_help" onclick="filterSafePlaces('women_help')"><i class="fas fa-venus"></i> Women's Help</div>
+                        <div class="places-filter-chip" data-type="transit" onclick="filterSafePlaces('transit')"><i class="fas fa-bus"></i> Transit</div>
+                    </div>
                     <div id="safePlacesList">
                         <!-- Dynamic content -->
                     </div>
@@ -841,6 +1068,110 @@
             </div>
         </div>
 
+        <!-- Emergency Preferences Modal -->
+        <div class="modal settings-modal" id="emergencyPreferencesModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-sliders"></i> Emergency Preferences</h2>
+                    <button class="close-btn" onclick="closeModal('emergencyPreferencesModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-item">
+                        <div>
+                            <strong>Share Medical Info in SOS</strong>
+                            <p>Include blood group, allergies & conditions with guardian alerts</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="prefShareMedicalInfo" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <strong>Silent SOS</strong>
+                            <p>Trigger SOS without sound, only vibration</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="prefSilentSOS">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <strong>Auto-notify on Journey Delay</strong>
+                            <p>Alert guardians automatically if you don't check in on time</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="prefAutoNotifyJourney" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+                        <div>
+                            <strong>Preferred Emergency Contact</strong>
+                            <p>Who gets called first when you trigger SOS</p>
+                        </div>
+                        <select id="prefPreferredHelpline" class="input-field" style="width: 100%;">
+                            <option value="police">Police (100/112)</option>
+                            <option value="women_helpline">Women Helpline (1091)</option>
+                            <option value="guardian">First Trusted Guardian</option>
+                        </select>
+                    </div>
+
+                    <h4 style="margin: 22px 0 4px; color: var(--dark);"><i class="fas fa-shield-halved"></i> Hands-Free Protection</h4>
+
+                    <div class="setting-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+                        <div class="voice-sos-row" style="width:100%; justify-content: space-between;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <span class="voice-sos-mic" id="voiceSosMicIcon"><i class="fas fa-microphone"></i></span>
+                                <div>
+                                    <strong>Voice SOS (Hands-Free)</strong>
+                                    <p>Say "Help me", "SOS", "Emergency" or your code word to trigger SOS</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="prefVoiceSOS" onchange="toggleVoiceSOS(this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <input type="text" id="prefVoiceCodeWord" class="voice-codeword-input" placeholder="Optional custom code word (e.g. 'pineapple')">
+                        <span class="voice-sos-status-pill" id="voiceSosStatusPill" style="display:none;">
+                            <i class="fas fa-circle" style="font-size:8px;"></i> <span id="voiceSosStatusText">Listening in background</span>
+                        </span>
+                    </div>
+
+                    <div class="setting-item">
+                        <div>
+                            <strong>Shake Detection</strong>
+                            <p>Shake your phone rapidly 3–5 times to trigger an SOS countdown, even if the screen is locked or out of reach</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="prefShakeDetection" checked onchange="toggleShakeDetection(this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <button class="shake-permission-btn" id="shakePermissionBtn" onclick="requestShakePermission()" style="display:none;">
+                        <i class="fas fa-mobile-screen-button"></i> Enable Motion Access for Shake Detection
+                    </button>
+
+                    <div class="setting-item">
+                        <div>
+                            <strong>Automatic Video Recording</strong>
+                            <p>Start front camera, audio & GPS recording automatically the instant SOS is triggered, and upload encrypted evidence to the cloud</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="prefAutoVideoRecording" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <button class="subscribe-btn" onclick="saveEmergencyPreferences()" style="margin-top: 20px;">
+                        Save Preferences
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="modal settings-modal" id="appearanceSettingsModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -922,6 +1253,19 @@
                 </div>
                 <div class="modal-body">
                     <p style="text-align: center; margin-bottom: 20px; font-size: 16px;">Choose the plan that fits your safety needs</p>
+
+                    <table class="plan-compare-table">
+                        <thead>
+                            <tr><th>Feature</th><th>Free</th><th>Premium</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Unlimited Guardians</td><td class="pc-no"><i class="fas fa-times"></i></td><td class="pc-yes"><i class="fas fa-check"></i></td></tr>
+                            <tr><td>Journey Analytics</td><td class="pc-no"><i class="fas fa-times"></i></td><td class="pc-yes"><i class="fas fa-check"></i></td></tr>
+                            <tr><td>Cloud Backup</td><td class="pc-no"><i class="fas fa-times"></i></td><td class="pc-yes"><i class="fas fa-check"></i></td></tr>
+                            <tr><td>AI Assistant</td><td>Limited</td><td class="pc-yes">Unlimited</td></tr>
+                            <tr><td>Safe Route</td><td>Basic</td><td class="pc-yes">Advanced</td></tr>
+                        </tbody>
+                    </table>
                     
                     <div class="plan-container">
                         <!-- Free Plan -->
@@ -934,8 +1278,11 @@
                                 <li><i class="fas fa-check"></i> 1 Emergency Guardian</li>
                                 <li><i class="fas fa-check"></i> Basic SOS Alert</li>
                                 <li><i class="fas fa-check"></i> Risk Scanner</li>
+                                <li><i class="fas fa-check"></i> AI Assistant (Limited)</li>
+                                <li><i class="fas fa-check"></i> Safe Route (Basic)</li>
                                 <li><i class="fas fa-times"></i> <strong>No Map Navigation</strong></li>
-                                <li><i class="fas fa-times"></i> No Safe Route Planning</li>
+                                <li><i class="fas fa-times"></i> No Journey Analytics</li>
+                                <li><i class="fas fa-times"></i> No Cloud Backup</li>
                                 <li><i class="fas fa-times"></i> No Video Content</li>
                             </ul>
                             <div class="plan-price">
@@ -958,7 +1305,9 @@
                             <ul class="plan-features">
                                 <li><i class="fas fa-check"></i> <strong>5 Emergency Guardians</strong></li>
                                 <li><i class="fas fa-check"></i> Full Map Navigation</li>
-                                <li><i class="fas fa-check"></i> Safe Route Planning</li>
+                                <li><i class="fas fa-check"></i> Advanced Safe Route Planning</li>
+                                <li><i class="fas fa-check"></i> Journey Analytics</li>
+                                <li><i class="fas fa-check"></i> Cloud Backup</li>
                                 <li><i class="fas fa-check"></i> Find Safe Spots</li>
                                 <li><i class="fas fa-check"></i> Live Location Sharing</li>
                                 <li><i class="fas fa-check"></i> Video Content (with Ads)</li>
@@ -989,7 +1338,9 @@
                             <ul class="plan-features">
                                 <li><i class="fas fa-check"></i> <strong>5 Emergency Guardians</strong></li>
                                 <li><i class="fas fa-check"></i> Full Map Navigation</li>
-                                <li><i class="fas fa-check"></i> Safe Route Planning</li>
+                                <li><i class="fas fa-check"></i> Advanced Safe Route Planning</li>
+                                <li><i class="fas fa-check"></i> Journey Analytics</li>
+                                <li><i class="fas fa-check"></i> Cloud Backup</li>
                                 <li><i class="fas fa-check"></i> Find Safe Spots</li>
                                 <li><i class="fas fa-check"></i> Live Location Sharing</li>
                                 <li><i class="fas fa-check"></i> Video Content (No Ads)</li>
@@ -1014,11 +1365,206 @@
                 </div>
             </div>
         </div>
+
+        <!-- Journey Mode Modal -->
+        <div class="modal" id="journeyModal">
+            <div class="modal-content" style="max-height: 88vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-route"></i> Journey Mode</h2>
+                    <button class="close-btn" onclick="closeModal('journeyModal')">&times;</button>
+                </div>
+                <div class="modal-body" id="journeyModalBody">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Safety Map Modal -->
+        <div class="modal" id="communityMapModal">
+            <div class="modal-content" style="max-height: 88vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-map-location-dot"></i> Community Safety Map</h2>
+                    <button class="close-btn" onclick="closeModal('communityMapModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="community-legend">
+                        <div class="legend-chip"><span class="legend-dot legend-harassment"></span> Harassment</div>
+                        <div class="legend-chip"><span class="legend-dot legend-stalking"></span> Stalking</div>
+                        <div class="legend-chip"><span class="legend-dot legend-lighting"></span> Poor Lighting</div>
+                        <div class="legend-chip"><span class="legend-dot legend-patrol"></span> Police Patrol</div>
+                        <div class="legend-chip"><span class="legend-dot legend-safe"></span> Safe Area</div>
+                    </div>
+                    <div id="communityMap" style="height: 260px; border-radius: 20px; margin-bottom: 15px;"></div>
+                    <button class="map-btn" onclick="showIncidentModal()" style="margin-bottom: 15px;">
+                        <i class="fas fa-plus"></i> Submit Anonymous Report
+                    </button>
+                    <h4 style="margin-bottom: 10px; color: var(--dark);"><i class="fas fa-list"></i> Recent Community Reports</h4>
+                    <div id="communityReportsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Chat Assistant Modal -->
+        <div class="modal" id="chatModal">
+            <div class="modal-content" style="max-height: 88vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-robot"></i> AI Safety Assistant</h2>
+                    <button class="close-btn" onclick="closeModal('chatModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="chat-window">
+                        <div class="chat-messages" id="chatMessages"></div>
+                        <div class="chat-suggestions">
+                            <button class="chat-chip" onclick="sendChatSuggestion('I feel unsafe')">I feel unsafe</button>
+                            <button class="chat-chip" onclick="sendChatSuggestion('Someone is following me')">Someone is following me</button>
+                            <button class="chat-chip" onclick="sendChatSuggestion('Nearest police station?')">Nearest police station?</button>
+                            <button class="chat-chip" onclick="sendChatSuggestion('How to file FIR?')">How to file FIR?</button>
+                            <button class="chat-chip" onclick="sendChatSuggestion('Emergency numbers')">Emergency numbers</button>
+                        </div>
+                        <div class="chat-input-row">
+                            <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+                            <button class="chat-send-btn" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Incident Reporting Modal -->
+        <div class="modal" id="incidentModal">
+            <div class="modal-content" style="max-height: 88vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-triangle-exclamation"></i> Report Incident</h2>
+                    <button class="close-btn" onclick="closeModal('incidentModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="incident-form-group">
+                        <label>Type of Incident</label>
+                        <div class="incident-type-grid" id="incidentTypeGrid">
+                            <div class="incident-type-opt" data-type="Harassment" data-color="#ff5252" onclick="selectIncidentType(this)"><i class="fas fa-hand"></i>Harassment</div>
+                            <div class="incident-type-opt" data-type="Unsafe Road" data-color="#ff9800" onclick="selectIncidentType(this)"><i class="fas fa-road"></i>Unsafe Road</div>
+                            <div class="incident-type-opt" data-type="Poor Lighting" data-color="#ffd600" onclick="selectIncidentType(this)"><i class="fas fa-lightbulb"></i>Poor Lighting</div>
+                            <div class="incident-type-opt" data-type="Stalking" data-color="#ff9800" onclick="selectIncidentType(this)"><i class="fas fa-eye"></i>Stalking</div>
+                            <div class="incident-type-opt" data-type="Theft" data-color="#9c27b0" onclick="selectIncidentType(this)"><i class="fas fa-user-ninja"></i>Theft</div>
+                        </div>
+                    </div>
+                    <div class="incident-form-group">
+                        <label>Photo (optional)</label>
+                        <input type="file" id="incidentPhoto" accept="image/*">
+                    </div>
+                    <div class="incident-form-group">
+                        <label>Description</label>
+                        <textarea id="incidentDescription" placeholder="Describe what happened..."></textarea>
+                    </div>
+                    <div class="incident-form-group">
+                        <label>Location</label>
+                        <p id="incidentLocation" style="color: #666; font-size: 14px;">Using current location</p>
+                    </div>
+                    <button class="subscribe-btn" onclick="submitIncidentReport()">
+                        <i class="fas fa-paper-plane"></i> Submit Report (Anonymous)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart Check-in Modal -->
+        <div class="modal" id="checkinModal">
+            <div class="modal-content" style="max-height: 88vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-clock"></i> Smart Check-in</h2>
+                    <button class="close-btn" onclick="closeModal('checkinModal')">&times;</button>
+                </div>
+                <div class="modal-body" id="checkinModalBody">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Evidence Vault Modal -->
+        <div class="modal" id="vaultModal">
+            <div class="modal-content" style="max-height: 88vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-box-archive"></i> Emergency Evidence Vault</h2>
+                    <button class="close-btn" onclick="closeModal('vaultModal')">&times;</button>
+                </div>
+                <div class="modal-body" id="vaultModalBody">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Women's Legal Help Modal -->
+        <div class="modal" id="legalHelpModal">
+            <div class="modal-content" style="max-height: 88vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-scale-balanced"></i> Women's Legal Help</h2>
+                    <button class="close-btn" onclick="closeModal('legalHelpModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="legal-quick-links" id="legalQuickLinks">
+                        <div class="legal-link-card active" data-cat="emergency_laws" onclick="switchLegalCategory('emergency_laws')"><i class="fas fa-gavel"></i>Emergency Laws</div>
+                        <div class="legal-link-card" data-cat="womens_rights" onclick="switchLegalCategory('womens_rights')"><i class="fas fa-venus"></i>Women's Rights</div>
+                        <div class="legal-link-card" data-cat="cyber_crime" onclick="switchLegalCategory('cyber_crime')"><i class="fas fa-laptop"></i>Cyber Crime</div>
+                        <div class="legal-link-card" data-cat="fir_process" onclick="switchLegalCategory('fir_process')"><i class="fas fa-file-signature"></i>FIR Process</div>
+                        <div class="legal-link-card" data-cat="domestic_violence" onclick="switchLegalCategory('domestic_violence')"><i class="fas fa-house-crack"></i>Domestic Violence</div>
+                        <div class="legal-link-card" data-cat="helplines" onclick="switchLegalCategory('helplines')"><i class="fas fa-phone-volume"></i>Emergency Helplines</div>
+                    </div>
+
+                    <div id="legalContentArea" style="margin-top: 18px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Modal -->
+        <div class="modal" id="achievementsModal">
+            <div class="modal-content" style="max-height: 88vh;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-trophy"></i> Achievements</h2>
+                    <button class="close-btn" onclick="closeModal('achievementsModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="text-align:center; color:#888; font-size: 13px; margin-bottom: 18px;">Earn badges as you use SHE-SECURE to stay safe and help your community</p>
+                    <div class="achievements-grid" id="achievementsGrid"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="checkin-popup-overlay" id="checkinPopupOverlay">
+            <div class="checkin-popup-box">
+                <i class="fas fa-shield-heart"></i>
+                <h3>Are you safe?</h3>
+                <p id="checkinPopupText">You haven't reached your destination yet. Please confirm you're okay.</p>
+                <div class="checkin-popup-actions">
+                    <button class="checkin-yes-btn" onclick="confirmCheckinSafe()"><i class="fas fa-check"></i> YES</button>
+                    <button class="checkin-help-btn" onclick="triggerCheckinHelp()"><i class="fas fa-hand"></i> Need Help</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Automatic Recording Indicator -->
+        <div class="rec-indicator-badge" id="recIndicatorBadge">
+            <span class="rec-dot-small"></span> Recording &amp; uploading evidence
+        </div>
+
+        <!-- Smart Notification Banner -->
+        <div class="smart-notification" id="smartNotification">
+            <div class="smart-notification-top">
+                <i class="fas fa-triangle-exclamation sn-icon"></i>
+                <div class="smart-notification-body">
+                    <strong id="smartNotificationTitle">High Risk Area Ahead</strong>
+                    <p id="smartNotificationSubtitle">Police Station · 700 m away</p>
+                </div>
+                <button class="sn-close" onclick="dismissSmartNotification()">&times;</button>
+            </div>
+            <div class="smart-notification-actions">
+                <button class="sn-secondary" onclick="dismissSmartNotification()">Dismiss</button>
+                <button class="sn-primary" onclick="acceptSmartNotificationRoute()">Take Safer Route?</button>
+            </div>
+        </div>
     </div>
-  
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
-  
-</body>
+    <script src="js/script.js"></script>
+</body> 
 </html>
