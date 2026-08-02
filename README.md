@@ -1,80 +1,116 @@
-SHECURE is a single-page, mobile-first “women safety” web app that includes onboarding (splash + login/signup), an SOS flow, risk analysis UI, guardian management, learning content, map-based safe routing, and subscription gating, all implemented in one HTML file with inline CSS and JavaScript using localStorage.​
+# SHE-SECURE 🛡️
 
-Below is a concise README you can put as README.md (modify project name/credits as you like):
+A women's safety companion app — built as a web app (HTML/CSS/JS) simulating a full-featured personal safety experience: SOS alerts, live journey tracking, community safety reports, an AI safety assistant, and more.
 
-#SHECURE – Women Safety Web App​
-SHECURE is a mobile-first, single-page web application designed to help women stay safe using an SOS system, AI-style risk visualization, location-based safe places, and learning resources for self-defense and safety tricks.​
+**[Live Demo →](#deployment)** *(enable GitHub Pages to get a live link — see below)*
 
-Features:
-​
-Splash screen with animated shield icon and staged loading messages.​
+---
 
-Authentication flow: login and signup screens with email/phone, password validation, and a demo account fallback.​
+## ✨ Features
 
-Local persistence using localStorage for auth state, user profile, app settings, and stats.​
+### Core Safety
+- **One-Tap SOS** — 3-second countdown SOS button with cancel window, guardian alerts, vibration feedback, and an emergency history timeline.
+- **🎙️ Voice SOS (Hands-Free)** — Say *"Help me"*, *"SOS"*, *"Emergency"*, or a custom code word to trigger SOS without touching the phone.
+- **📳 Shake Detection** — Shake the phone rapidly 3–5 times to start an SOS countdown, even with the screen off or out of reach.
+- **🎥 Automatic Video Recording** — SOS activation auto-starts front camera + audio recording and GPS logging, with encrypted evidence "uploaded" to your Evidence Vault.
+- **🗺️ Live Guardian Tracking** — When Journey Mode is active, your guardian sees a live map, auto-updating ETA, battery %, network strength, and last movement time.
 
-Main dashboard with:
+### Journey & Check-ins
+- **Journey Mode** — Live progress tracking to a destination with automatic "are you safe?" check-in prompts.
+- **Smart Check-in** — Set a destination + reach-by time; guardians are notified automatically if you don't confirm arrival.
 
-AI Risk Scanner card (risk bar, percentage, message).​
+### Community & Awareness
+- **AI Safety Score** — Real-time area risk scoring with reasons and route recommendations.
+- **Community Safety Map** — Crowd-sourced incident reports (harassment, poor lighting, stalking, etc.) with anonymous reporting.
+- **AI Safety Assistant** — Chat-based guidance for emergencies, legal questions, and nearby help.
+- **Women's Legal Help** — Quick-reference emergency laws, rights, cyber crime info, and FIR process.
 
-Large circular SOS button with countdown and cancel flow, plus shake/tap trigger concept.​
+### Trust & Utility
+- **Guardians** — Add trusted contacts who receive live location, SOS alerts, and check-in confirmations.
+- **Fake Call** — Simulate an incoming call to defuse uncomfortable situations.
+- **Safe Places & Safe Routes** — Nearby police stations, hospitals, and AI-suggested safer paths.
+- **Emergency Evidence Vault** — Timeline + recorded evidence for every past SOS event.
+- **Achievements & Analytics** — Gamified safety habit tracking.
 
-Current location card with “Refresh Location” and geolocation usage.​
+---
 
-Quick actions: Fake Call, Safe Places, Safe Route (map), Guardians.​
+## 📁 Project Structure
 
-Bottom navigation with Home, Map, Learn, Safety plus central SOS button for small screens and a floating SOS button for larger screens.​
+```
+she-secure/
+├── index.html        # Page markup only
+├── css/
+│   └── style.css     # All styling
+├── js/
+│   └── script.js      # All app logic
+├── LICENSE
+├── .gitignore
+└── README.md
+```
 
-Profile & account: profile modal, stats (SOS used, safe days, risk scans), editable profile, change password, and multiple settings modals (notifications, privacy, appearance).​
+The code itself is unchanged from the original single-file build — it's just been split into `index.html` / `css/style.css` / `js/script.js` for readability and a cleaner repo structure.
 
-Learn & Empower section with categories (Self Defense, Safety Tricks, Learn Tricks, Videos) and card-based content, some gated as premium.​
+---
 
-Guardians management with free-plan guardian limit, dynamic list, and add-guardian form.​
+## 🛠️ Tech Stack
 
-Map modal using Leaflet and OpenStreetMap tiles for safe route navigation and safe place markers (police, hospital, pharmacy).​
+- Vanilla HTML / CSS / JavaScript (no build step required)
+- [Leaflet.js](https://leafletjs.com/) for maps
+- [Font Awesome](https://fontawesome.com/) for icons
+- Browser APIs: Geolocation, Web Speech API, DeviceMotion, MediaRecorder/getUserMedia, Battery Status, Network Information
 
-Subscription system with Free, Premium with Ads, and Premium No Ads plans, affecting map access, guardian limit, and video locking.​
+> This is a front-end prototype/demo. Guardian alerts, calls, and cloud uploads are simulated in the browser (no backend) — see [Notes](#-notes--limitations) below.
 
-Theming and settings (light/dark/pink theme, notification toggles, privacy options, etc.).​
+---
 
-Tech Stack​
-HTML5 single-page structure with multiple modals and screens.​
+## 🚀 Getting Started
 
-CSS3 for responsive, card-based, app-like UI; extensive use of gradients, shadows, and media queries for different viewport heights/widths.​
+### Run locally
+No build tools needed.
 
-Vanilla JavaScript for app state, auth logic, SOS flow, UI interactions, settings, and integration with browser APIs.​
+```bash
+git clone https://github.com/<your-username>/she-secure.git
+cd she-secure
+# open index.html directly in a browser, or serve it:
+python3 -m http.server 8000
+# visit http://localhost:8000
+```
 
-LocalStorage for persisting user profile, authentication state, settings, guardians, and simple stats.​
+### Deployment
+The easiest way to get a live link is **GitHub Pages**:
 
-Leaflet for interactive maps and markers, using OpenStreetMap tiles.​
+1. Push this repo to GitHub.
+2. Go to **Settings → Pages**.
+3. Under **Build and deployment**, set **Source** to `Deploy from a branch`, branch `main`, folder `/ (root)`.
+4. Save — your app will be live at `https://<your-username>.github.io/she-secure/`.
 
-Font Awesome for icons and Google Fonts (Poppins) for typography.​
+---
 
-Getting Started​
-Clone or download the project and place the HTML file  into your project folder, for example as index.html.​
+## 🔐 Browser Permissions
 
-Ensure you have an internet connection for the external CDNs:
+Some features request browser permissions the first time they're used:
 
-Font Awesome
+| Feature | Permission | Notes |
+|---|---|---|
+| Voice SOS | Microphone | Uses the Web Speech API; falls back gracefully if unsupported. |
+| Shake Detection | Motion sensors | iOS 13+ requires an explicit tap to grant motion access (button appears automatically in Emergency Preferences). |
+| Automatic Video Recording | Camera + Microphone | Triggered only when SOS activates. |
+| Location features | Geolocation | Used for current location, safety score, and journey tracking. |
 
-Google Fonts (Poppins)
+All features degrade gracefully with a toast notification if a permission is denied or an API is unsupported.
 
-Leaflet CSS/JS
+---
 
-OpenStreetMap tiles through Leaflet​
+## ⚠️ Notes & Limitations
 
-Open index.html directly in a modern browser, or serve it via a simple static server
+This project is a **front-end demo/prototype**. To make it production-ready, you'd want to add:
+- A real backend for guardian notifications (SMS/push), account storage, and evidence upload
+- Actual encrypted cloud storage for recorded evidence
+- Real-time location sharing infrastructure (e.g., WebSockets)
+- Server-side auth instead of the current localStorage-based demo login
 
-The splash screen will run, then you will be taken to login or signup depending on the saved auth state.​
+---
 
-Usage Notes​
+## 📄 License
 
-All data is stored locally in the browser using keys such as shesecure_authenticated, shesecure_userProfile, and shesecure_settings.​
-
-Map-based safe routing and some learning videos are locked for the Free plan; upgrading inside the UI flips internal plan flags and unlocks features .​
-
-SOS, map, and safe places features depend on geolocation and should be tested over HTTPS or localhost for full browser support.​
-
-Project Status and Next Steps​
-This is currently a front-end prototype focused on UX, feature exploration, and local-only state.​
-Typical next enhancements include hooking authentication and profiles to a real backend, integrating SMS/call APIs for SOS and guardians, adding real AI-driven risk analysis, and wiring safe places and routes to live map/search services.
+Released under the [MIT License](LICENSE).
