@@ -2,7 +2,7 @@
 
 A women's safety companion app — built as a web app (HTML/CSS/JS) simulating a full-featured personal safety experience: SOS alerts, live journey tracking, community safety reports, an AI safety assistant, and more.
 
-**[Live Demo →](#deployment)** *(enable GitHub Pages to get a live link — see below)*
+**[Live Demo →](#deployment)** https://statuesque-daffodil-e33675.netlify.app/
 
 ---
 
